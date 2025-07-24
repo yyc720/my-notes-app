@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 interface Attachment {
   url: string;
@@ -16,7 +16,9 @@ interface Note {
   tags?: string[];
 }
 
-export default function EditNotePage({ params }: { params: { id: string } }) {
+export default function EditNotePage() {
+  const params = useParams<{ id: string }>();
+  const id = params.id;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
@@ -27,7 +29,7 @@ export default function EditNotePage({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`/api/notes/${params.id}`)
+    fetch(`/api/notes/${id}`)
       .then(res => res.json())
       .then((note: Note) => {
         setTitle(note.title);
@@ -35,7 +37,7 @@ export default function EditNotePage({ params }: { params: { id: string } }) {
         setTags(note.tags?.join(",") || "");
         setAttachments(note.attachments || []);
       });
-  }, [params.id]);
+  }, [id]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -63,7 +65,7 @@ export default function EditNotePage({ params }: { params: { id: string } }) {
       }
       uploaded = await res.json();
     }
-    const res = await fetch(`/api/notes/${params.id}`, {
+    const res = await fetch(`/api/notes/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
