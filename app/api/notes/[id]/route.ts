@@ -4,12 +4,13 @@ import { ObjectId } from 'mongodb';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
   try {
     const client = await clientPromise;
     const db = client.db();
-    const note = await db.collection('notes').findOne({ _id: new ObjectId(params.id) });
+    const note = await db.collection('notes').findOne({ _id: new ObjectId(id) });
     if (!note) return NextResponse.json({ error: '找不到筆記' }, { status: 404 });
     return NextResponse.json(note);
   } catch (error) {
@@ -19,8 +20,9 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
   try {
     const body = await req.json();
     const { title, content, attachments, tags } = body;
@@ -28,7 +30,7 @@ export async function PUT(
     const client = await clientPromise;
     const db = client.db();
     const result = await db.collection('notes').findOneAndUpdate(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
           title,
@@ -49,12 +51,13 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { id } = context.params;
   try {
     const client = await clientPromise;
     const db = client.db();
-    const result = await db.collection('notes').deleteOne({ _id: new ObjectId(params.id) });
+    const result = await db.collection('notes').deleteOne({ _id: new ObjectId(id) });
     if (!result || result.deletedCount === 0) return NextResponse.json({ error: '找不到筆記' }, { status: 404 });
     return NextResponse.json({ success: true });
   } catch (error) {
