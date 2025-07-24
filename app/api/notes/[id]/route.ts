@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
+export const runtime = 'nodejs';
+
 export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
