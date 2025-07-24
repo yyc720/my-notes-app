@@ -8,9 +8,11 @@ interface Note {
 }
 
 async function getNotes(): Promise<Note[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/notes`, {
-    cache: 'no-store',
-  });
+  const baseUrl =
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000';
+  const res = await fetch(`${baseUrl}/api/notes`, { cache: 'no-store' });
   if (!res.ok) return [];
   return res.json();
 }
