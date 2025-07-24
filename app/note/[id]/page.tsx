@@ -1,8 +1,10 @@
-import { notFound } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 interface Attachment {
   url: string;
-  type: 'image' | 'pdf';
+  type: "image" | "pdf";
   name: string;
 }
 
@@ -16,17 +18,19 @@ interface Note {
   updatedAt: string;
 }
 
-async function getNote(id: string): Promise<Note | null> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/notes/${id}`, {
-    cache: 'no-store',
-  });
-  if (!res.ok) return null;
-  return res.json();
-}
+export default function NoteDetailPage() {
+  const params = useParams<{ id: string }>();
+  const id = params.id;
+  const [note, setNote] = useState<Note | null>(null);
 
-export default async function NoteDetailPage({ params }: { params: { id: string } }) {
-  const note = await getNote(params.id);
-  if (!note) return notFound();
+  useEffect(() => {
+    fetch(`/api/notes/${id}`)
+      .then(res => res.json())
+      .then(setNote);
+  }, [id]);
+
+  if (!note) return <div>載入中...</div>;
+
   return (
     <main style={{ maxWidth: 600, margin: '0 auto', padding: 24 }}>
       <h1>{note.title}</h1>
@@ -39,7 +43,6 @@ export default async function NoteDetailPage({ params }: { params: { id: string 
         </div>
       )}
       <article style={{ margin: '16px 0' }}>
-        {/* 這裡可改用 markdown 解析器顯示 */}
         <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{note.content}</pre>
       </article>
       {note.attachments && note.attachments.length > 0 && (
