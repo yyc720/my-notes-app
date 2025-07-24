@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
     const result = await db.collection('notes').insertOne(note);
     return NextResponse.json({ ...note, _id: result.insertedId });
   } catch (error) {
-    return NextResponse.json({ error: '新增筆記失敗' }, { status: 500 });
+    console.error('API /api/notes error:', error);
+    return NextResponse.json({ error: '新增筆記失敗', detail: String(error) }, { status: 500 });
   }
 } 
