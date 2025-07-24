@@ -4,10 +4,7 @@ import { ObjectId } from 'mongodb';
 
 export const runtime = 'nodejs';
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, context: any) {
   const id = context.params.id;
   try {
     const client = await clientPromise;
@@ -20,10 +17,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, context: any) {
   const id = context.params.id;
   try {
     const body = await req.json();
@@ -51,10 +45,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, context: any) {
   const id = context.params.id;
   try {
     const client = await clientPromise;
