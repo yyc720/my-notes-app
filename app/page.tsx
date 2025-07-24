@@ -14,7 +14,9 @@ async function getNotes(): Promise<Note[]> {
       : 'http://localhost:3000';
   const res = await fetch(`${baseUrl}/api/notes`, { cache: 'no-store' });
   if (!res.ok) return [];
-  return res.json();
+  const data = await res.json();
+  // 防呆：如果不是陣列就回傳空陣列
+  return Array.isArray(data) ? data : [];
 }
 
 export default async function HomePage() {
