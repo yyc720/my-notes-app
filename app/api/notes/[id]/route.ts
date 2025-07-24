@@ -8,7 +8,7 @@ export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const id = context.params.id;
   try {
     const client = await clientPromise;
     const db = client.db();
@@ -24,7 +24,7 @@ export async function PUT(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const id = context.params.id;
   try {
     const body = await req.json();
     const { title, content, attachments, tags } = body;
@@ -55,7 +55,7 @@ export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const id = context.params.id;
   try {
     const client = await clientPromise;
     const db = client.db();
